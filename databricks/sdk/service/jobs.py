@@ -58,8 +58,8 @@ class BaseJob:
 class BaseRun:
     attempt_number: Optional[int] = None
     """The sequence number of this run attempt for a triggered job run. The initial attempt of a run
-    has an attempt_number of 0\. If the initial run attempt fails, and the job has a retry policy
-    (`max_retries` \> 0), subsequent runs are created with an `original_attempt_run_id` of the
+    has an attempt_number of 0. If the initial run attempt fails, and the job has a retry policy
+    (`max_retries` > 0), subsequent runs are created with an `original_attempt_run_id` of the
     original attempt’s ID and an incrementing `attempt_number`. Runs are retried only until they
     succeed, and the maximum `attempt_number` is the same as the `max_retries` value for the job."""
 
@@ -2505,8 +2505,8 @@ class Run:
 
     attempt_number: Optional[int] = None
     """The sequence number of this run attempt for a triggered job run. The initial attempt of a run
-    has an attempt_number of 0\. If the initial run attempt fails, and the job has a retry policy
-    (`max_retries` \> 0), subsequent runs are created with an `original_attempt_run_id` of the
+    has an attempt_number of 0. If the initial run attempt fails, and the job has a retry policy
+    (`max_retries` > 0), subsequent runs are created with an `original_attempt_run_id` of the
     original attempt’s ID and an incrementing `attempt_number`. Runs are retried only until they
     succeed, and the maximum `attempt_number` is the same as the `max_retries` value for the job."""
 
@@ -3344,15 +3344,16 @@ class RunState:
 class RunTask:
     """Used when outputting a child run, in GetRun or ListRuns."""
 
-    task_key: str
+    # adding the default here is necessary to process legacy cluster reports
+    task_key: str = None
     """A unique name for the task. This field is used to refer to this task from other tasks. This
     field is required and must be unique within its parent job. On Update or Reset, this field is
     used to reference the tasks to be updated or reset."""
 
     attempt_number: Optional[int] = None
     """The sequence number of this run attempt for a triggered job run. The initial attempt of a run
-    has an attempt_number of 0\. If the initial run attempt fails, and the job has a retry policy
-    (`max_retries` \> 0), subsequent runs are created with an `original_attempt_run_id` of the
+    has an attempt_number of 0. If the initial run attempt fails, and the job has a retry policy
+    (`max_retries` > 0), subsequent runs are created with an `original_attempt_run_id` of the
     original attempt’s ID and an incrementing `attempt_number`. Runs are retried only until they
     succeed, and the maximum `attempt_number` is the same as the `max_retries` value for the job."""
 
