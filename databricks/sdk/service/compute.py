@@ -555,7 +555,8 @@ class ClusterAttributes:
     * `LEGACY_TABLE_ACL`: This mode is for users migrating from legacy Table ACL clusters. *
     `LEGACY_PASSTHROUGH`: This mode is for users migrating from legacy Passthrough on high
     concurrency clusters. * `LEGACY_SINGLE_USER`: This mode is for users migrating from legacy
-    Passthrough on standard clusters."""
+    Passthrough on standard clusters. * `LEGACY_SINGLE_USER_STANDARD`: This mode provides a way that
+    doesn’t have UC nor passthrough enabled."""
 
     docker_image: Optional[DockerImage] = None
 
@@ -769,7 +770,8 @@ class ClusterDetails:
     * `LEGACY_TABLE_ACL`: This mode is for users migrating from legacy Table ACL clusters. *
     `LEGACY_PASSTHROUGH`: This mode is for users migrating from legacy Passthrough on high
     concurrency clusters. * `LEGACY_SINGLE_USER`: This mode is for users migrating from legacy
-    Passthrough on standard clusters."""
+    Passthrough on standard clusters. * `LEGACY_SINGLE_USER_STANDARD`: This mode provides a way that
+    doesn’t have UC nor passthrough enabled."""
 
     default_tags: Optional[Dict[str, str]] = None
     """Tags that are added by Databricks regardless of any `custom_tags`, including:
@@ -792,7 +794,7 @@ class ClusterDetails:
 
     driver: Optional[SparkNode] = None
     """Node on which the Spark driver resides. The driver node contains the Spark master and the
-    <Databricks> application that manages the per-notebook Spark REPLs."""
+    Databricks application that manages the per-notebook Spark REPLs."""
 
     driver_healthy: Optional[bool] = None
     """An APC attribute only. This field is missing in the API docs and the unforked databricks
@@ -1506,7 +1508,8 @@ class ClusterSpec:
     * `LEGACY_TABLE_ACL`: This mode is for users migrating from legacy Table ACL clusters. *
     `LEGACY_PASSTHROUGH`: This mode is for users migrating from legacy Passthrough on high
     concurrency clusters. * `LEGACY_SINGLE_USER`: This mode is for users migrating from legacy
-    Passthrough on standard clusters."""
+    Passthrough on standard clusters. * `LEGACY_SINGLE_USER_STANDARD`: This mode provides a way that
+    doesn’t have UC nor passthrough enabled."""
 
     docker_image: Optional[DockerImage] = None
 
@@ -1821,7 +1824,8 @@ class CreateCluster:
     * `LEGACY_TABLE_ACL`: This mode is for users migrating from legacy Table ACL clusters. *
     `LEGACY_PASSTHROUGH`: This mode is for users migrating from legacy Passthrough on high
     concurrency clusters. * `LEGACY_SINGLE_USER`: This mode is for users migrating from legacy
-    Passthrough on standard clusters."""
+    Passthrough on standard clusters. * `LEGACY_SINGLE_USER_STANDARD`: This mode provides a way that
+    doesn’t have UC nor passthrough enabled."""
 
     docker_image: Optional[DockerImage] = None
 
@@ -2297,10 +2301,12 @@ class DataSecurityMode(Enum):
     * `LEGACY_TABLE_ACL`: This mode is for users migrating from legacy Table ACL clusters. *
     `LEGACY_PASSTHROUGH`: This mode is for users migrating from legacy Passthrough on high
     concurrency clusters. * `LEGACY_SINGLE_USER`: This mode is for users migrating from legacy
-    Passthrough on standard clusters."""
+    Passthrough on standard clusters. * `LEGACY_SINGLE_USER_STANDARD`: This mode provides a way that
+    doesn’t have UC nor passthrough enabled."""
 
     LEGACY_PASSTHROUGH = 'LEGACY_PASSTHROUGH'
     LEGACY_SINGLE_USER = 'LEGACY_SINGLE_USER'
+    LEGACY_SINGLE_USER_STANDARD = 'LEGACY_SINGLE_USER_STANDARD'
     LEGACY_TABLE_ACL = 'LEGACY_TABLE_ACL'
     NONE = 'NONE'
     SINGLE_USER = 'SINGLE_USER'
@@ -2665,7 +2671,8 @@ class EditCluster:
     * `LEGACY_TABLE_ACL`: This mode is for users migrating from legacy Table ACL clusters. *
     `LEGACY_PASSTHROUGH`: This mode is for users migrating from legacy Passthrough on high
     concurrency clusters. * `LEGACY_SINGLE_USER`: This mode is for users migrating from legacy
-    Passthrough on standard clusters."""
+    Passthrough on standard clusters. * `LEGACY_SINGLE_USER_STANDARD`: This mode provides a way that
+    doesn’t have UC nor passthrough enabled."""
 
     docker_image: Optional[DockerImage] = None
 
@@ -3005,9 +3012,8 @@ class EditResponse:
 
 @dataclass
 class Environment:
-    """The a environment entity used to preserve serverless environment side panel and jobs'
-    environment for non-notebook task. In this minimal environment spec, only pip dependencies are
-    supported. Next ID: 5"""
+    """The environment entity used to preserve serverless environment side panel and jobs' environment
+    for non-notebook task. In this minimal environment spec, only pip dependencies are supported."""
 
     client: str
     """Client version used by the environment The client is the user-facing environment of the runtime.
@@ -5098,7 +5104,7 @@ class Policy:
     """Additional human-readable description of the cluster policy."""
 
     is_default: Optional[bool] = None
-    """If true, policy is a default policy created and managed by <Databricks>. Default policies cannot
+    """If true, policy is a default policy created and managed by Databricks. Default policies cannot
     be deleted, and their policy families cannot be changed."""
 
     libraries: Optional[List[Library]] = None
@@ -6381,7 +6387,8 @@ class ClustersAPI:
           * `LEGACY_TABLE_ACL`: This mode is for users migrating from legacy Table ACL clusters. *
           `LEGACY_PASSTHROUGH`: This mode is for users migrating from legacy Passthrough on high concurrency
           clusters. * `LEGACY_SINGLE_USER`: This mode is for users migrating from legacy Passthrough on
-          standard clusters.
+          standard clusters. * `LEGACY_SINGLE_USER_STANDARD`: This mode provides a way that doesn’t have UC
+          nor passthrough enabled.
         :param docker_image: :class:`DockerImage` (optional)
         :param driver_instance_pool_id: str (optional)
           The optional ID of the instance pool for the driver of the cluster belongs. The pool cluster uses
@@ -6674,7 +6681,8 @@ class ClustersAPI:
           * `LEGACY_TABLE_ACL`: This mode is for users migrating from legacy Table ACL clusters. *
           `LEGACY_PASSTHROUGH`: This mode is for users migrating from legacy Passthrough on high concurrency
           clusters. * `LEGACY_SINGLE_USER`: This mode is for users migrating from legacy Passthrough on
-          standard clusters.
+          standard clusters. * `LEGACY_SINGLE_USER_STANDARD`: This mode provides a way that doesn’t have UC
+          nor passthrough enabled.
         :param docker_image: :class:`DockerImage` (optional)
         :param driver_instance_pool_id: str (optional)
           The optional ID of the instance pool for the driver of the cluster belongs. The pool cluster uses

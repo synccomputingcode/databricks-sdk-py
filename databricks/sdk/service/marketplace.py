@@ -59,6 +59,38 @@ class AssetType(Enum):
     ASSET_TYPE_UNSPECIFIED = 'ASSET_TYPE_UNSPECIFIED'
 
 
+@dataclass
+class BatchGetListingsResponse:
+    listings: Optional[List[Listing]] = None
+
+    def as_dict(self) -> dict:
+        """Serializes the BatchGetListingsResponse into a dictionary suitable for use as a JSON request body."""
+        body = {}
+        if self.listings: body['listings'] = [v.as_dict() for v in self.listings]
+        return body
+
+    @classmethod
+    def from_dict(cls, d: Dict[str, any]) -> BatchGetListingsResponse:
+        """Deserializes the BatchGetListingsResponse from a dictionary."""
+        return cls(listings=_repeated_dict(d, 'listings', Listing))
+
+
+@dataclass
+class BatchGetProvidersResponse:
+    providers: Optional[List[ProviderInfo]] = None
+
+    def as_dict(self) -> dict:
+        """Serializes the BatchGetProvidersResponse into a dictionary suitable for use as a JSON request body."""
+        body = {}
+        if self.providers: body['providers'] = [v.as_dict() for v in self.providers]
+        return body
+
+    @classmethod
+    def from_dict(cls, d: Dict[str, any]) -> BatchGetProvidersResponse:
+        """Deserializes the BatchGetProvidersResponse from a dictionary."""
+        return cls(providers=_repeated_dict(d, 'providers', ProviderInfo))
+
+
 class Category(Enum):
 
     ADVERTISING_AND_MARKETING = 'ADVERTISING_AND_MARKETING'
@@ -1265,11 +1297,16 @@ class Listing:
 
     id: Optional[str] = None
 
+    provider_summary: Optional[ProviderListingSummaryInfo] = None
+    """we can not use just ProviderListingSummary since we already have same name on entity side of the
+    state"""
+
     def as_dict(self) -> dict:
         """Serializes the Listing into a dictionary suitable for use as a JSON request body."""
         body = {}
         if self.detail: body['detail'] = self.detail.as_dict()
         if self.id is not None: body['id'] = self.id
+        if self.provider_summary: body['provider_summary'] = self.provider_summary.as_dict()
         if self.summary: body['summary'] = self.summary.as_dict()
         return body
 
@@ -1278,6 +1315,7 @@ class Listing:
         """Deserializes the Listing from a dictionary."""
         return cls(detail=_from_dict(d, 'detail', ListingDetail),
                    id=d.get('id', None),
+                   provider_summary=_from_dict(d, 'provider_summary', ProviderListingSummaryInfo),
                    summary=_from_dict(d, 'summary', ListingSummary))
 
 
@@ -1696,6 +1734,37 @@ class ProviderAnalyticsDashboard:
 
 
 @dataclass
+class ProviderIconFile:
+    icon_file_id: Optional[str] = None
+
+    icon_file_path: Optional[str] = None
+
+    icon_type: Optional[ProviderIconType] = None
+
+    def as_dict(self) -> dict:
+        """Serializes the ProviderIconFile into a dictionary suitable for use as a JSON request body."""
+        body = {}
+        if self.icon_file_id is not None: body['icon_file_id'] = self.icon_file_id
+        if self.icon_file_path is not None: body['icon_file_path'] = self.icon_file_path
+        if self.icon_type is not None: body['icon_type'] = self.icon_type.value
+        return body
+
+    @classmethod
+    def from_dict(cls, d: Dict[str, any]) -> ProviderIconFile:
+        """Deserializes the ProviderIconFile from a dictionary."""
+        return cls(icon_file_id=d.get('icon_file_id', None),
+                   icon_file_path=d.get('icon_file_path', None),
+                   icon_type=_enum(d, 'icon_type', ProviderIconType))
+
+
+class ProviderIconType(Enum):
+
+    DARK = 'DARK'
+    PRIMARY = 'PRIMARY'
+    PROVIDER_ICON_TYPE_UNSPECIFIED = 'PROVIDER_ICON_TYPE_UNSPECIFIED'
+
+
+@dataclass
 class ProviderInfo:
     name: str
 
@@ -1766,6 +1835,33 @@ class ProviderInfo:
                    published_by=d.get('published_by', None),
                    support_contact_email=d.get('support_contact_email', None),
                    term_of_service_link=d.get('term_of_service_link', None))
+
+
+@dataclass
+class ProviderListingSummaryInfo:
+    """we can not use just ProviderListingSummary since we already have same name on entity side of the
+    state"""
+
+    description: Optional[str] = None
+
+    icon_files: Optional[List[ProviderIconFile]] = None
+
+    name: Optional[str] = None
+
+    def as_dict(self) -> dict:
+        """Serializes the ProviderListingSummaryInfo into a dictionary suitable for use as a JSON request body."""
+        body = {}
+        if self.description is not None: body['description'] = self.description
+        if self.icon_files: body['icon_files'] = [v.as_dict() for v in self.icon_files]
+        if self.name is not None: body['name'] = self.name
+        return body
+
+    @classmethod
+    def from_dict(cls, d: Dict[str, any]) -> ProviderListingSummaryInfo:
+        """Deserializes the ProviderListingSummaryInfo from a dictionary."""
+        return cls(description=d.get('description', None),
+                   icon_files=_repeated_dict(d, 'icon_files', ProviderIconFile),
+                   name=d.get('name', None))
 
 
 @dataclass
@@ -2532,6 +2628,26 @@ class ConsumerListingsAPI:
     def __init__(self, api_client):
         self._api = api_client
 
+    def batch_get(self, *, ids: Optional[List[str]] = None) -> BatchGetListingsResponse:
+        """Get one batch of listings. One may specify up to 50 IDs per request.
+        
+        Batch get a published listing in the Databricks Marketplace that the consumer has access to.
+        
+        :param ids: List[str] (optional)
+        
+        :returns: :class:`BatchGetListingsResponse`
+        """
+
+        query = {}
+        if ids is not None: query['ids'] = [v for v in ids]
+        headers = {'Accept': 'application/json', }
+
+        res = self._api.do('GET',
+                           '/api/2.1/marketplace-consumer/listings:batchGet',
+                           query=query,
+                           headers=headers)
+        return BatchGetListingsResponse.from_dict(res)
+
     def get(self, id: str) -> GetListingResponse:
         """Get listing.
         
@@ -2779,6 +2895,26 @@ class ConsumerProvidersAPI:
 
     def __init__(self, api_client):
         self._api = api_client
+
+    def batch_get(self, *, ids: Optional[List[str]] = None) -> BatchGetProvidersResponse:
+        """Get one batch of providers. One may specify up to 50 IDs per request.
+        
+        Batch get a provider in the Databricks Marketplace with at least one visible listing.
+        
+        :param ids: List[str] (optional)
+        
+        :returns: :class:`BatchGetProvidersResponse`
+        """
+
+        query = {}
+        if ids is not None: query['ids'] = [v for v in ids]
+        headers = {'Accept': 'application/json', }
+
+        res = self._api.do('GET',
+                           '/api/2.1/marketplace-consumer/providers:batchGet',
+                           query=query,
+                           headers=headers)
+        return BatchGetProvidersResponse.from_dict(res)
 
     def get(self, id: str) -> GetProviderResponse:
         """Get a provider.
