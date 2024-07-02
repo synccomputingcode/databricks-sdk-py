@@ -787,7 +787,7 @@ class ClusterDetails:
     - Name: <Databricks internal use>"""
 
     disk_spec: Optional[dict] = None
-    """An APC attribute only. This field is missing in the API docs and the unforked databricks
+    """[PROD-2198] An APC attribute only. This field is missing in the API docs and the unforked databricks
     sdk so it needed to be added here"""
 
     docker_image: Optional[DockerImage] = None
@@ -797,11 +797,11 @@ class ClusterDetails:
     Databricks application that manages the per-notebook Spark REPLs."""
 
     driver_healthy: Optional[bool] = None
-    """An APC attribute only. This field is missing in the API docs and the unforked databricks
+    """[PROD-2198] An APC attribute only. This field is missing in the API docs and the unforked databricks
     sdk so it needed to be added here"""
 
     driver_instance_source: Optional[dict] = None
-    """An APC attribute only. This field is missing in the API docs and the unforked databricks
+    """[PROD-2198] An APC attribute only. This field is missing in the API docs and the unforked databricks
     sdk so it needed to be added here"""
 
     driver_instance_pool_id: Optional[str] = None
@@ -813,7 +813,7 @@ class ClusterDetails:
     type will be set as the same value as `node_type_id` defined above."""
 
     effective_spark_version: Optional[str] = None
-    """An APC attribute only. This field is missing in the API docs and the unforked databricks
+    """[PROD-2198] An APC attribute only. This field is missing in the API docs and the unforked databricks
     sdk so it needed to be added here"""
 
     enable_elastic_disk: Optional[bool] = None
@@ -837,14 +837,14 @@ class ClusterDetails:
     init script logs are sent to `<destination>/<cluster-ID>/init_scripts`."""
 
     init_scripts_safe_mode: Optional[int] = None
-    """An APC attribute only. This field is missing in the API docs and the unforked databricks
+    """[PROD-2198] An APC attribute only. This field is missing in the API docs and the unforked databricks
     sdk so it needed to be added here"""
 
     instance_pool_id: Optional[str] = None
     """The optional ID of the instance pool to which the cluster belongs."""
 
     instance_source: Optional[dict] = None
-    """An APC attribute only. This field is missing in the API docs and the unforked databricks
+    """[PROD-2198] An APC attribute only. This field is missing in the API docs and the unforked databricks
     sdk so it needed to be added here"""
 
     jdbc_port: Optional[int] = None
@@ -852,7 +852,7 @@ class ClusterDetails:
     on this port in executor nodes."""
 
     last_activity_time: Optional[int] = None
-    """An APC attribute only. This field is missing in the API docs and the unforked databricks
+    """[PROD-2198] An APC attribute only. This field is missing in the API docs and the unforked databricks
     sdk so it needed to be added here"""
 
     last_restarted_time: Optional[int] = None
@@ -3169,6 +3169,7 @@ class EventDetailsCause(Enum):
 
 class EventType(Enum):
 
+    # [PROD-2198] Test data in the backend has an event type that was missing here
     ADD_NODES_FAILED = 'ADD_NODES_FAILED'
     AUTOSCALING_STATS_REPORT = 'AUTOSCALING_STATS_REPORT'
     CREATING = 'CREATING'
