@@ -10,7 +10,8 @@ on:
       - main
 
 jobs:
-  tests:
+  tests-ubuntu:
+    uses: ./.github/workflows/test.yml
     strategy:
       fail-fast: false
       matrix:
