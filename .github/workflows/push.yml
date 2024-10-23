@@ -2,12 +2,9 @@ name: build
 
 on:
   pull_request:
-    types: [ opened, synchronize ]
+    types: [opened, synchronize]
   merge_group:
-    types: [ checks_requested ]
-  push:
-    branches:
-      - main
+    types: [checks_requested]
 
 jobs:
   tests-ubuntu:
